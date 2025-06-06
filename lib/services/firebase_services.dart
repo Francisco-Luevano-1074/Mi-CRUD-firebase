@@ -2,36 +2,58 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-Future<List> getPeople() async {
-  List people = [];
-  CollectionReference collectionReferencePeople = db.collection("people");
-  QuerySnapshot queryPeople = await collectionReferencePeople.get();
-  for (var doc in queryPeople.docs) {
+Future<List> getGatos() async {
+  List gatos = [];
+  CollectionReference collectionReferenceGatos = db.collection("gatos");
+  QuerySnapshot queryGatos = await collectionReferenceGatos.get();
+  for (var doc in queryGatos.docs) {
     final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    final person = {
-      
+    final gato = {
       "name": data['name'],
-      "uid": doc.id,
-    };
-    people.add(person);
+      "edad": data['edad'],
+      "color": data['color'],
+      "raza": data['raza'],
+      "precio": data['precio'],
+      "caracteristica": data['caracteristica'],
+      "idventa": data['idventa'],
+      "idorden": data['idorden'],
+       "uid": doc.id};
+    gatos.add(gato);
   }
 
-  return people;
+  return gatos;
 }
 
 //Guardar name en base de datos
-Future<void> addPeople(String name) async {
-  await db.collection("people").add({"name": name});
+Future<void> addGatos(String name, int edad, String color, String raza, double precio, String caracteristica, String idventa, String idorden) async {
+  await db.collection("gatos").add({
+    "name": name,
+    "edad": edad,
+    "color": color,
+    "raza": raza,
+    "precio": precio,
+    "caracteristica": caracteristica,
+    "idventa": idventa,
+    "idorden": idorden,
+    });
 }
 
 //Actualizar un name en la base de datos
 // Suggested code may be subject to a license. Learn more: ~LicenseLog:4205097586.
-Future<void> updatePeople(String uid, String newname) async {
-  await db.collection("people").doc(uid).set({"name": newname});
+Future<void> updateGatos(String uid, String newname, int newedad, String newcolor, String newraza, double newprecio, String newcaracteristica, String newidventa, String newidorden) async {
+  await db.collection("gatos").doc(uid).set({
+    "name": newname,
+    "edad": newedad,
+    "color": newcolor,
+    "raza": newraza,
+    "precio": newprecio,
+    "caracteristica": newcaracteristica,
+    "idventa": newidventa,
+    "idorden": newidorden,
+    });
 }
 
 //Eliminar un name de la base de datos
-Future<void> deletePeople(String uid) async {
-  await db.collection("people").doc(uid).delete();
+Future<void> deleteGatos(String uid) async {
+  await db.collection("gatos").doc(uid).delete();
 }
-

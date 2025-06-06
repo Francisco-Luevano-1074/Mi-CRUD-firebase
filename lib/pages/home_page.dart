@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.orangeAccent,
       ),
       body: FutureBuilder(
-        future: getPeople(),
+        future: getGatos(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 return Dismissible(
                   onDismissed: (direction) async {
-                    await deletePeople(snapshot.data?[index]['uid']);
+                    await deleteGatos(snapshot.data?[index]['uid']);
                     snapshot.data?.removeAt(index);
                   },
                   confirmDismiss: (direction) async {
@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
                       builder: (context) {
                         return AlertDialog(
                           title: Text(
-                            "¿Estás seguro de eliminar a ${snapshot.data?[index]['name']}?",
+                            "¿Estás seguro de eliminar a ${snapshot.data?[index]['name'] ?? 'este gato'}?", // Usar ?? para manejar null
                           ),
                           actions: [
                             TextButton(
@@ -67,19 +67,26 @@ class _HomeState extends State<Home> {
                   direction: DismissDirection.endToStart,
                   key: Key(snapshot.data?[index]['uid']),
                   child: ListTile(
-                    title: Text(snapshot.data?[index]['name']),
-                    onTap: (() async {
-                      await Navigator.pushNamed(
-                        context,
-                        '/edit',
-                        arguments: {
-                          "name": snapshot.data?[index]['name'],
-                          "uid": snapshot.data?[index]['uid'],
-                        },
-                      );
-                      setState(() {});
-                    }),
-                  ),
+                        title: Text(snapshot.data?[index]['name'] ?? ''), // Usar ?? '' para manejar null
+                        onTap: (() async {
+                          await Navigator.pushNamed(
+                            context,
+                            '/edit',
+                            arguments: {
+                              "name": snapshot.data?[index]['name'],
+                              "uid": snapshot.data?[index]['uid'],
+                              "edad": snapshot.data?[index]['edad'],
+                              "color": snapshot.data?[index]['color'],
+                              "raza": snapshot.data?[index]['raza'],
+                              "precio": snapshot.data?[index]['precio'],
+                              "caracteristica": snapshot.data?[index]['caracteristica'],
+                              "idventa": snapshot.data?[index]['idventa'],
+                              "idorden": snapshot.data?[index]['idorden'],
+                            },
+                          );
+                          setState(() {});
+                        }),
+                      ),
                 );
               },
             );
